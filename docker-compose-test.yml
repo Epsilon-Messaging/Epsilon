@@ -4,7 +4,8 @@ services:
     entrypoint: /bin/bash
     working_dir: "/app"
     depends_on:
-      - epsilon
+      epsilon: 
+        condition: service_healthy
     volumes:
       - "./:/app:rw"
     network_mode: service:epsilon
@@ -16,3 +17,8 @@ services:
     volumes:
       - "./:/app:rw"
     command: ".buildkite/scripts/run.sh Epsilon"
+    healthcheck:
+      test: curl --fail -k http://localhost:5172/health || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5

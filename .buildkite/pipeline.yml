@@ -5,16 +5,22 @@ steps:
       - make test
     artifact_paths:
       - "*/coverage.opencover.xml"
+    concurrency_group: "epsilon_test"
+    concurrency: 1
 
   - label: ":test_tube: Integration Tests"
     command:
       - make integration-test
+    concurrency_group: "epsilon_integration_test"
+    concurrency: 1
 
   - label: ":test_tube: Stryker Test"
     command:
       - make stryker
     artifact_paths:
       - "**/mutation-report.html"
+    concurrency_group: "epsilon_stryker"
+    concurrency: 1
 
   - label: ":sonarqube: Sonarqube Scanner"
     depends_on: 
@@ -22,3 +28,5 @@ steps:
     command:
       - buildkite-agent artifact download **/*opencover.xml .
       - make sonarqube
+    concurrency_group: "epsilon_sonarqube"
+    concurrency: 1
