@@ -1,7 +1,7 @@
 dotnet tool restore
 echo '--- :sonarqube: Running Sonarqube'
 
-if [[ "${}BUILDKITE_PULL_REQUEST}" == "false" ]]; then
+if [[ "${BUILDKITE_PULL_REQUEST}" == "false" ]]; then
   dotnet sonarscanner begin \
     /o:"epsilon-messaging" \
     /k:"Epsilon-Messaging_Epsilon" \

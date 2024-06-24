@@ -4,7 +4,11 @@
     "thresholds": {
       "high": 100,
       "low": 90,
-      "break": 0
-    }
+      "break": 90
+    },
+    "mutate": [
+      "**/*.cs",
+      "!**/Program.cs"
+    ]
   }
 }
