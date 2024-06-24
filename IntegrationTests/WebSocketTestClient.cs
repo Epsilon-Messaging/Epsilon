@@ -50,8 +50,8 @@ public class WebSocketTestClient
     {
         if (_webSocket.State is WebSocketState.Open or WebSocketState.CloseReceived)
         {
-            await _cancellationTokenSource.CancelAsync();
             await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Disconnecting", CancellationToken.None);
+            await _cancellationTokenSource.CancelAsync();
             Console.WriteLine("Disconnected!");
         }
 
