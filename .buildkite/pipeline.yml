@@ -1,4 +1,12 @@
 steps:
+  - label: ":dotnet: Dotnet Publish"
+    command:
+      - make publish
+    artifact_paths:
+      - "*_publish.zip"
+    concurrency_group: "epsilon_publish"
+    concurrency: 1
+    
   - label: ":test_tube: Dotnet Test"
     key: "tests"
     command:
@@ -29,4 +37,18 @@ steps:
       - buildkite-agent artifact download **/*opencover.xml .
       - make sonarqube
     concurrency_group: "epsilon_sonarqube"
+    concurrency: 1
+    
+  - block: ":docker: Deploy"
+    key: "block_docker_hub"
+    branches: "main"
+
+  - label: ":docker: Deploy to Docker Hub"
+    branches: "main"
+    depends_on:
+      - "block_docker_hub"
+    command:
+      - buildkite-agent artifact download *_publish.zip .
+      - make deploy
+    concurrency_group: "epsilon_deploy"
     concurrency: 1

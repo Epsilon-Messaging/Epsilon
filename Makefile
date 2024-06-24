@@ -13,6 +13,12 @@ stryker:
 sonarqube:
 	docker-compose run --rm sonarqube .buildkite/scripts/sonarqube.sh
 
+publish:
+	docker-compose run --rm dotnet .buildkite/scripts/publish.sh
+
+deploy:
+	.buildkite/scripts/deploy.sh
+
 down:
 	echo "Down"
 	docker-compose -f docker-compose-test.yml down
