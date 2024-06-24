@@ -1,0 +1,18 @@
+steps:
+  - label: ":test_tube: Dotnet Test"
+    command:
+      - make test
+    artifact_paths:
+      - "*/coverage.opencover.xml"
+
+  - label: ":test_tube: Integration Tests"
+    command:
+      - make integration-test
+    artifact_paths:
+      - "*/coverage.opencover.xml"
+
+  - label: ":test_tube: Stryker Test"
+    command:
+      - make stryker
+    artifact_paths:
+      - "**/mutation-report.html"

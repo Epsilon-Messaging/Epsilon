@@ -1,0 +1,10 @@
+{
+  "stryker-config": {
+    "coverage-analysis": "perTest",
+    "thresholds": {
+      "high": 100,
+      "low": 90,
+      "break": 90
+    }
+  }
+}

@@ -1,0 +1,18 @@
+services:
+  dotnet:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    entrypoint: /bin/bash
+    working_dir: "/app"
+    depends_on:
+      - epsilon
+    volumes:
+      - "./:/app:rw"
+    network_mode: service:epsilon
+
+  epsilon:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    entrypoint: /bin/bash
+    working_dir: "/app"
+    volumes:
+      - "./:/app:rw"
+    command: ".buildkite/scripts/run.sh Epsilon"

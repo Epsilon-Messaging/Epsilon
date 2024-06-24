@@ -1,0 +1,7 @@
+services:
+  dotnet:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    entrypoint: /bin/bash
+    working_dir: "/app"
+    volumes:
+      - "./:/app:rw"

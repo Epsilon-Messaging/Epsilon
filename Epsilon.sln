@@ -5,6 +5,10 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsilon", "Epsilon\Epsilon.csproj", "{CC313682-6C00-444C-9ACE-43B9773BFA68}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsilon.Tests", "Epsilon.Tests\Epsilon.Tests.csproj", "{7B8C0218-54BB-4526-857C-3D695163EC0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{2644988E-1627-4091-A4EB-38EA3686580F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{CC313682-6C00-444C-9ACE-43B9773BFA68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC313682-6C00-444C-9ACE-43B9773BFA68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC313682-6C00-444C-9ACE-43B9773BFA68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B8C0218-54BB-4526-857C-3D695163EC0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B8C0218-54BB-4526-857C-3D695163EC0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B8C0218-54BB-4526-857C-3D695163EC0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B8C0218-54BB-4526-857C-3D695163EC0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2644988E-1627-4091-A4EB-38EA3686580F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2644988E-1627-4091-A4EB-38EA3686580F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2644988E-1627-4091-A4EB-38EA3686580F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2644988E-1627-4091-A4EB-38EA3686580F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
