@@ -9,6 +9,6 @@ public static class EnvironmentVariables
     private static string GetEnvironmentVariable(string environmentVariable)
     {
         return Environment.GetEnvironmentVariable(environmentVariable) ??
-               throw new ArgumentException($"Environment Variable ${environmentVariable} is not set");
+               throw new ArgumentException($"Environment Variable {environmentVariable} is not set");
     }
 }
