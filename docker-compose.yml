@@ -3,5 +3,7 @@ services:
     image: mcr.microsoft.com/dotnet/sdk:8.0
     entrypoint: /bin/bash
     working_dir: "/app"
+    environment:
+      - SONARQUBE_TOKEN
     volumes:
       - "./:/app:rw"

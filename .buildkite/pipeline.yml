@@ -16,3 +16,10 @@ steps:
       - make stryker
     artifact_paths:
       - "**/mutation-report.html"
+
+  - label: ":sonarqube: Sonarqube Scanner"
+    command:
+      - buildkite-agent artifact download **/*opencover.xml .
+      - make sonarqube
+    artifact_paths:
+      - "**/mutation-report.html"
