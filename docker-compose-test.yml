@@ -19,6 +19,6 @@ services:
     command: ".buildkite/scripts/run.sh Epsilon"
     healthcheck:
       test: curl --fail -k http://localhost:5172/health || exit 1
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
