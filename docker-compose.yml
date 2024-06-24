@@ -1,6 +1,5 @@
 services:
   dotnet:
-    image: mcr.microsoft.com/dotnet/sdk:8.0
     entrypoint: /bin/bash
     working_dir: "/app"
     environment:
@@ -10,6 +9,9 @@ services:
       - BUILDKITE_PULL_REQUEST_BASE_BRANCH
     volumes:
       - "./:/app:rw"
+    build:
+      context: ".buildkite"
+      dockerfile: "Dotnet.Dockerfile"
   sonarqube:
     entrypoint: /bin/bash
     working_dir: "/app"
