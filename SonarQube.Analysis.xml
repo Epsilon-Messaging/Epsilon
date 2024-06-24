@@ -3,7 +3,7 @@
     <Property Name="sonar.verbose">false</Property>
     <Property Name="sonar.projectName">Epsilon-Messaging</Property>
     <Property Name="sonar.analysis.projectTags">epsilon-messaging</Property>
-    <Property Name="sonar.cs.opencover.reportPaths">**/*opencover.xml</Property>
+    <Property Name="sonar.cs.opencover.reportPaths">**/*.opencover.xml</Property>
     <Property Name="sonar.coverage.exclusions">**/*.Tests/**,**/Program.cs</Property>
     <Property Name="sonar.pullrequest.github.repository">Epsilon-Messaging/Epsilon</Property>
     <Property Name="sonar.pullrequest.provider">github</Property>
