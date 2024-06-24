@@ -4,7 +4,7 @@ namespace Epsilon.Controllers;
 
 [ApiController]
 [Route("api")]
-public class TestController : ControllerBase
+public class WebSocketController : ControllerBase
 {
     [Route("websocket")]
     public async Task WebSocket()
