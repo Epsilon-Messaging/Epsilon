@@ -1,7 +1,7 @@
 function push(){
   echo "Pushing peachesmlg/epsilon:$1"
   docker tag epsilon "peachesmlg/epsilon:$1"
-  docker push epsilon "peachesmlg/epsilon:$1"
+  docker push "peachesmlg/epsilon:$1"
 }
 
 echo '--- :dotnet: dotnet deploy'
