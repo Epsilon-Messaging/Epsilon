@@ -24,5 +24,3 @@ steps:
     command:
       - buildkite-agent artifact download **/*opencover.xml .
       - make sonarqube
-    artifact_paths:
-      - "**/mutation-report.html"
