@@ -16,6 +16,6 @@ public class Epsilon
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var body = await response.Content.ReadAsStringAsync();
-        body.Should().Be("Hellof World!");
+        body.Should().Be("Hello World!");
     }
 }
