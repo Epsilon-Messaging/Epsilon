@@ -1,5 +1,5 @@
 using System.Net.WebSockets;
-using System.Text;
+using AutoFixture;
 using Epsilon.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +14,7 @@ public class WebSocketControllerTest
     private readonly Mock<WebSocketManager> _mockWebSocketManager = new();
     private readonly Mock<WebSocket> _mockWebSocket = new();
     private readonly WebSocketController _webSocketController;
+    private readonly Fixture _fixture = new();
 
     public WebSocketControllerTest()
     {
@@ -58,7 +59,7 @@ public class WebSocketControllerTest
     public async Task WebSocket_ShouldEchoMessage_WhenWeSendAMessage()
     {
         var isFirst = true;
-        var message = Encoding.UTF8.GetBytes("Hello, World!");
+        var message = _fixture.CreateMany<byte>(1024).ToArray();
         _mockWebSocket
             .Setup(socket => socket.ReceiveAsync(It.IsAny<ArraySegment<byte>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((ArraySegment<byte> buffer, CancellationToken _) =>
