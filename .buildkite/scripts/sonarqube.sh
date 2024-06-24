@@ -1,8 +1,6 @@
 dotnet tool restore
 echo '--- :sonarqube: Running Sonarqube'
 
-cat /app/Epsilon.Tests/coverage.opencover.xml
-
 if [[ "${BUILDKITE_PULL_REQUEST}" == "false" ]]; then
   dotnet sonarscanner begin \
     /o:"epsilon-messaging" \
