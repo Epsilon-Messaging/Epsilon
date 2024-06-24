@@ -9,7 +9,7 @@ integration-test:
 stryker:
 	docker-compose run --rm dotnet .buildkite/scripts/stryker.sh
 sonarqube:
-	docker-compose run --rm dotnet .buildkite/scripts/sonarqube.sh
+	docker-compose run --rm sonarqube .buildkite/scripts/sonarqube.sh
 
 down:
 	docker-compose -f docker-compose-test.yml down

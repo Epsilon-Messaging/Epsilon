@@ -10,3 +10,15 @@ services:
       - BUILDKITE_PULL_REQUEST_BASE_BRANCH
     volumes:
       - "./:/app:rw"
+  sonarqube:
+    entrypoint: /bin/bash
+    working_dir: "/app"
+    environment:
+      - SONARQUBE_TOKEN
+      - BUILDKITE_BRANCH
+      - BUILDKITE_PULL_REQUEST
+      - BUILDKITE_PULL_REQUEST_BASE_BRANCH
+    volumes:
+      - "./:/app:rw"
+    build:
+      dockerfile: "Sonarqube.Dockerfile"
