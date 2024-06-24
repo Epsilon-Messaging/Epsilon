@@ -21,4 +21,5 @@ services:
     volumes:
       - "./:/app:rw"
     build:
+      context: ".buildkite"
       dockerfile: "Sonarqube.Dockerfile"
