@@ -58,7 +58,7 @@ public class WebSocketController : ControllerBase
         await webSocket.SendAsync(
             new ArraySegment<byte>(buffer),
             WebSocketMessageType.Text,
-            false,
+            true,
             CancellationToken.None
         );
     }
