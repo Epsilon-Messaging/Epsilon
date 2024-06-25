@@ -20,7 +20,7 @@ public class UserManager : IUserManager
     }
 
     public Task<User> GetUserById(byte[] userId)
-    {  
+    {
         throw new NotImplementedException();
     }
 }

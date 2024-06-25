@@ -7,10 +7,10 @@ namespace Epsilon.Data
     {
         public EpsilonDbContext(DbContextOptions<EpsilonDbContext> options)
         {
-                       
+
         }
-        
-        public DbSet<Message> Messages { get; set; } 
-        public DbSet<User> Users { get; set; } 
+
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
