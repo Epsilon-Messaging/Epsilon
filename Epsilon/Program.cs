@@ -1,3 +1,4 @@
+using Epsilon;
 using Serilog;
 using static Epsilon.EnvironmentVariables;
 
@@ -9,6 +10,8 @@ builder.Configuration
 
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
+builder.Services.AddTransient<IUserManager, UserManager>();
+builder.Services.AddTransient<IMessageManager, MessageManager>();
 
 builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
 var app = builder.Build();
