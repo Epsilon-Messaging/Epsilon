@@ -13,12 +13,6 @@
       "commands": [
         "dotnet-sonarscanner"
       ]
-    },
-    "dotnet-ef": {
-      "version": "8.0.6",
-      "commands": [
-        "dotnet-ef"
-      ]
     }
   }
 }
