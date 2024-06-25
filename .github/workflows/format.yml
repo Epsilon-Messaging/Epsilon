@@ -3,6 +3,7 @@ name: Dotnet Format
 on:
   push:
     branches:
+      - '*'
       - '!main'
 
 jobs:
