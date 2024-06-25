@@ -26,7 +26,6 @@ jobs:
         run: dotnet format
 
       - name: Commit and push changes
-        uses: actions/checkout@v4
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
