@@ -5,11 +5,8 @@ namespace Epsilon.Data
 {
     public class EpsilonDbContext : DbContext
     {
-        public EpsilonDbContext(DbContextOptions<EpsilonDbContext> options)
-        {
-
-        }
-
+        public EpsilonDbContext(DbContextOptions<EpsilonDbContext> options) : base(options) { }
+        
         public DbSet<Message> Messages { get; set; }
         public DbSet<User> Users { get; set; }
     }

@@ -5,7 +5,7 @@ namespace Epsilon.Models
 {
     public class Message
     {
-        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? MessageId { get; set; }
 
         // Hash of senders's public key

@@ -1,4 +1,6 @@
 using Epsilon;
+using Epsilon.Data;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using static Epsilon.EnvironmentVariables;
 
@@ -12,7 +14,7 @@ builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
 builder.Services.AddTransient<IUserManager, UserManager>();
 builder.Services.AddTransient<IMessageManager, MessageManager>();
-
+builder.Services.AddDbContext<EpsilonDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
 var app = builder.Build();
 
@@ -24,5 +26,11 @@ app.UseWebSockets(new WebSocketOptions
 {
     KeepAliveInterval = TimeSpan.FromSeconds(30),
 });
+
+// Migrate db
+DatabaseInitializer.Migrate(app);
+
+// Seed database
+DatabaseInitializer.Seed(app);
 
 await app.RunAsync();
