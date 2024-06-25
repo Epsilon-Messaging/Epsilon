@@ -91,7 +91,7 @@ public class WebSocketControllerTest
         _mockWebSocket.Verify(socket =>
             socket.SendAsync(new ArraySegment<byte>(message, 0, message.Length), WebSocketMessageType.Text, false, It.IsAny<CancellationToken>())
         );
-
+        
         _mockWebSocket.Verify(socket =>
             socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed", It.IsAny<CancellationToken>())
         );
