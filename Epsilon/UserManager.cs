@@ -4,25 +4,23 @@ namespace Epsilon;
 
 public class UserManager : IUserManager
 {
-    public async Task AddUser(User user)
+    public Task AddUser(User user)
     {
-        await Task.Delay(0);
+        throw new NotImplementedException();
     }
 
-    public async Task DeleteUser(byte[] userId)
+    public Task DeleteUser(byte[] userId)
     {
-        await Task.Delay(0);
+        throw new NotImplementedException();
     }
 
-    public async Task<List<User>> GetAllUsers()
+    public Task<List<User>> GetAllUsers()
     {
-        await Task.Delay(0);
-        return new List<User>();
+        throw new NotImplementedException();
     }
 
-    public async Task<User> GetUserById(byte[] userId)
+    public Task<User> GetUserById(byte[] userId)
     {  
-        await Task.Delay(0);
-        return new User();
+        throw new NotImplementedException();
     }
 }

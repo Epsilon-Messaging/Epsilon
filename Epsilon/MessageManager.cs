@@ -4,33 +4,29 @@ namespace Epsilon;
 
 public class MessageManager : IMessageManager
 {
-    public async Task AddMessage(Message message)
+    public Task AddMessage(Message message)
     {
-        await Task.Delay(0);
+        throw new NotImplementedException();
     }
 
-    public async Task DeleteMessage(byte[] messageId)
+    public Task DeleteMessage(byte[] messageId)
     {
-        await Task.Delay(0);
+        throw new NotImplementedException();
     }
 
-    public async Task<List<Message>> GetAllMessages()
+    public Task<List<Message>> GetAllMessages()
     {
-        await Task.Delay(0);
-        return new List<Message>();
+        throw new NotImplementedException();
     }
 
-    public async Task<List<Message>> GetMessagesBetweenUsers(byte[] userId1, byte[] userId2, DateTime? startDate = null,
+    public Task<List<Message>> GetMessagesBetweenUsers(byte[] userId1, byte[] userId2, DateTime? startDate = null,
         DateTime? endDate = null)
     {
-        await Task.Delay(0);
-        return new List<Message>();
+        throw new NotImplementedException();
     }
 
-    public async Task<Message> GetMessageById(byte[] messageId)
+    public Task<Message> GetMessageById(byte[] messageId)
     {
-        await Task.Delay(0);
-        return new Message();
+        throw new NotImplementedException();
     }
-
 }
