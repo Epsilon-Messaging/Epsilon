@@ -16,12 +16,12 @@ public class DatabaseInitializer
             {
                 if (!context.Users.Any())
                     InitUsers(context);
-                
+
                 if (!context.Messages.Any())
                     InitMessages(context);
             }
         }
-        
+
     }
 
     public static void Migrate(WebApplication app)
@@ -33,7 +33,7 @@ public class DatabaseInitializer
             db.Database.Migrate();
         }
     }
-    
+
     private static byte[] GenerateRandomBytes(int length)
     {
         byte[] randomBytes = new byte[length];
@@ -43,7 +43,7 @@ public class DatabaseInitializer
 
         return randomBytes;
     }
-    
+
     private static void InitUsers(EpsilonDbContext context)
     {
         var usersToAdd = new List<User>
@@ -58,7 +58,7 @@ public class DatabaseInitializer
 
         context.SaveChanges();
     }
-    
+
     private static void InitMessages(EpsilonDbContext context)
     {
         var messagesToAdd = new List<Message>
@@ -68,7 +68,7 @@ public class DatabaseInitializer
             new Message { EncryptedMessage  = GenerateRandomBytes(256), SenderId = GenerateRandomBytes(32), RecipientId = GenerateRandomBytes(32), CreatedAt = new DateTime() },
             new Message { EncryptedMessage  = GenerateRandomBytes(256), SenderId = GenerateRandomBytes(32), RecipientId = GenerateRandomBytes(32), CreatedAt = new DateTime() }
         };
-        
+
         foreach (var message in messagesToAdd)
             context.Messages.Add(message);
 
