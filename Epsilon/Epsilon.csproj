@@ -14,4 +14,10 @@
     <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Reactive">
+      <HintPath>..\..\..\.nuget\packages\system.reactive\5.0.0\lib\net5.0\System.Reactive.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

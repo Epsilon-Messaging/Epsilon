@@ -1,8 +1,8 @@
 namespace Epsilon.Models;
 
-public record MessageResponse(string Message)
+public record MessageResponse(string Message, string Username)
 {
-    public MessageResponse() : this("")
+    public MessageResponse() : this("", "")
     {
     }
 }

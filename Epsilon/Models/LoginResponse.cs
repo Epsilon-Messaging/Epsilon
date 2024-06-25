@@ -1,6 +1,6 @@
 namespace Epsilon.Models;
 
-public record LoginResponse(bool success, string reason)
+public record LoginResponse(bool Success, string Reason)
 {
     public LoginResponse() : this(true, "")
     {

@@ -1,8 +1,8 @@
 namespace Epsilon.Models;
 
-public record LoginRequest(int Id)
+public record LoginRequest(string Username)
 {
-    public LoginRequest() : this(0)
+    public LoginRequest() : this("")
     {
     }
 }
