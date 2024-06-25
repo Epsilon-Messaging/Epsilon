@@ -20,9 +20,9 @@ public class EnvironmentVariablesTest
     public void ASPNETCORE_ENVIRONMENT_ShouldThrowAnError_WhenItsNotSet()
     {
         Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", null);
-        
+
         var action = () => ASPNETCORE_ENVIRONMENT;
         action.Should().Throw<ArgumentException>().WithMessage("Environment Variable ASPNETCORE_ENVIRONMENT is not set");
     }
-    
+
 }
