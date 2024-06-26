@@ -1,12 +1,15 @@
 using System.Net.WebSockets;
+using System.Reactive.Subjects;
 using System.Text;
 using AutoFixture;
 using Epsilon.Controllers;
 using Epsilon.Handler.WebsocketMessageHandler;
+using Epsilon.Models;
 using Epsilon.Services.WebsocketStateService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Epsilon.Tests.Controllers;
@@ -30,6 +33,10 @@ public class WebSocketControllerTest
         _mockHttpContext
             .Setup(context => context.WebSockets)
             .Returns(_mockWebSocketManager.Object);
+        
+        _websocketStateService
+            .Setup(service => service.GetWebsocketState(It.IsAny<string>()))
+            .Returns(_fixture.Create<WebsocketState>());
 
         _webSocketController = new WebSocketController(_websocketStateService.Object, _mockWebsocketMessageHandler.Object)
         {
@@ -61,7 +68,7 @@ public class WebSocketControllerTest
     }
 
     [Fact]
-    public async Task WebSocket_ShouldEchoMessage_WhenWeSendAMessage()
+    public async Task WebSocket_ShouldHandleMessage_WhenWeSendAMessage()
     {
         var runs = 0;
         var message = _fixture.CreateMany<byte>(1024).ToArray();
@@ -95,6 +102,40 @@ public class WebSocketControllerTest
 
         _mockWebsocketMessageHandler.Verify(handler =>
                 handler.HandleMessage(Encoding.UTF8.GetString(message), It.IsAny<string>()), Times.Exactly(6)
+        );
+
+        _mockWebSocket.Verify(socket =>
+            socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed", It.IsAny<CancellationToken>())
+        );
+    }
+
+    [Fact]
+    public async Task WebSocket_ShouldSendMessage_WhenWePushOneToObservable()
+    {
+        var replay = new ReplaySubject<object>();
+        _websocketStateService
+            .Setup(service => service.GetWebsocketState(It.IsAny<string>()))
+            .Returns(new WebsocketState("", false, replay));
+
+        var message = _fixture.Create<WebsocketMessage<LoginRequest>>();
+        replay.OnNext(message);
+        
+        _mockWebSocket
+            .Setup(socket => socket.ReceiveAsync(It.IsAny<ArraySegment<byte>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new WebSocketReceiveResult(
+                0,
+                WebSocketMessageType.Close,
+                true,
+                WebSocketCloseStatus.NormalClosure,
+                "Closed"
+            ));
+
+        await _webSocketController.WebSocket();
+
+        var messageBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+        
+        _mockWebSocket.Verify(socket =>
+            socket.SendAsync(new ArraySegment<byte>(messageBytes, 0, messageBytes.Length), WebSocketMessageType.Text, true, It.IsAny<CancellationToken>())
         );
 
         _mockWebSocket.Verify(socket =>

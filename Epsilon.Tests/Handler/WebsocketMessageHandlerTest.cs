@@ -1,4 +1,5 @@
 using System.Reactive.Subjects;
+using AutoFixture;
 using Epsilon.Handler.WebsocketMessageHandler;
 using Epsilon.Models;
 using Epsilon.Services.WebsocketStateService;
@@ -13,9 +14,14 @@ public class WebsocketMessageHandlerTest
     private readonly Mock<IWebsocketStateService> _websocketStateService = new();
 
     private readonly WebsocketMessageHandler _websocketMessageHandler;
+    private readonly Fixture _fixture = new();
 
     public WebsocketMessageHandlerTest()
     {
+        _websocketStateService
+            .Setup(service => service.GetWebsocketState(It.IsAny<string>()))
+            .Returns(_fixture.Create<WebsocketState>());
+
         _websocketMessageHandler = new WebsocketMessageHandler(_websocketStateService.Object);
     }
 
@@ -27,10 +33,8 @@ public class WebsocketMessageHandlerTest
         _websocketMessageHandler.HandleMessage(json, "1");
 
         _websocketStateService.Verify(service =>
-            service.SetWebsocketState("1", new WebsocketState(
-                "MyUsername",
-                true,
-                new ReplaySubject<WebsocketMessage<MessageResponse>>()
+            service.SetWebsocketState("1", It.Is<WebsocketState>(state =>
+                state.Username == "MyUsername" && state.IsLoggedIn
             ))
         );
     }

@@ -13,7 +13,7 @@ public class WebsocketStateService : IWebsocketStateService
         SetWebsocketState(sessionId, new WebsocketState(
             "",
             false,
-            new ReplaySubject<WebsocketMessage<MessageResponse>>())
+            new ReplaySubject<object>())
         );
     }
 
