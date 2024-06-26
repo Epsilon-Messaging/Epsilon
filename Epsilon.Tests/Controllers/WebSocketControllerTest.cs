@@ -61,9 +61,9 @@ public class WebSocketControllerTest
             ));
 
         await _webSocketController.WebSocket();
-        
-        _websocketStateService.Verify(service => service.CreateWebsocket(It.IsAny<string>()) );
-        _websocketStateService.Verify(service => service.DeleteWebsocket(It.IsAny<string>()) );
+
+        _websocketStateService.Verify(service => service.CreateWebsocket(It.IsAny<string>()));
+        _websocketStateService.Verify(service => service.DeleteWebsocket(It.IsAny<string>()));
 
         _mockWebSocket.Verify(socket =>
             socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed", It.IsAny<CancellationToken>())
@@ -106,9 +106,9 @@ public class WebSocketControllerTest
         _mockWebsocketMessageHandler.Verify(handler =>
                 handler.HandleMessage(Encoding.UTF8.GetString(message), It.IsAny<string>()), Times.Exactly(6)
         );
-        
-        _websocketStateService.Verify(service => service.CreateWebsocket(It.IsAny<string>()) );
-        _websocketStateService.Verify(service => service.DeleteWebsocket(It.IsAny<string>()) );
+
+        _websocketStateService.Verify(service => service.CreateWebsocket(It.IsAny<string>()));
+        _websocketStateService.Verify(service => service.DeleteWebsocket(It.IsAny<string>()));
 
         _mockWebSocket.Verify(socket =>
             socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed", It.IsAny<CancellationToken>())
@@ -168,14 +168,14 @@ public class WebSocketControllerTest
             ));
 
         await _webSocketController.WebSocket();
-        
+
         var message = _fixture.Create<WebsocketMessage<LoginRequest>>();
         replay.OnNext(message);
 
         _mockWebSocket.Verify(socket =>
             socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed", It.IsAny<CancellationToken>())
         );
-        
+
         _mockWebSocket.Verify(socket =>
                 socket.SendAsync(It.IsAny<ArraySegment<byte>>(), WebSocketMessageType.Text, true, It.IsAny<CancellationToken>()), Times.Never
         );
