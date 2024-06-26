@@ -2,7 +2,10 @@ using System.Net.WebSockets;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
+using Epsilon.Models;
 using FluentAssertions.Reactive;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace IntegrationTests;
 
@@ -11,9 +14,9 @@ public class WebSocketTestClient
     private readonly ClientWebSocket _webSocket = new();
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private Task _receivingTask = Task.CompletedTask;
-    private readonly ReplaySubject<string> _recievedMessages = new();
+    private readonly ReplaySubject<object> _recievedMessages = new();
 
-    public FluentTestObserver<string> ReceivedMessages()
+    public FluentTestObserver<object> ReceivedMessages()
     {
         return _recievedMessages.AsObservable().Observe();
     }
@@ -32,11 +35,12 @@ public class WebSocketTestClient
         }
     }
 
-    public async Task Send(string content)
+    public async Task Send(object content)
     {
         if (_webSocket.State == WebSocketState.Open)
         {
-            var bytesToSend = new ArraySegment<byte>(Encoding.UTF8.GetBytes(content));
+            var json = JsonConvert.SerializeObject(content);
+            var bytesToSend = new ArraySegment<byte>(Encoding.UTF8.GetBytes(json));
             await _webSocket.SendAsync(bytesToSend, WebSocketMessageType.Text, true, _cancellationTokenSource.Token);
             Console.WriteLine($"Sent: {content}");
         }
@@ -82,7 +86,8 @@ public class WebSocketTestClient
                 else
                 {
                     var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    _recievedMessages.OnNext(receivedMessage);
+                    var message = ConvertMessage(receivedMessage);
+                    if (message != null) _recievedMessages.OnNext(message);
                     Console.WriteLine($"Received: {receivedMessage}");
                 }
             }
@@ -95,5 +100,24 @@ public class WebSocketTestClient
         {
             Console.WriteLine($"Receive exception: {ex.Message}");
         }
+    }
+
+    private static object? ConvertMessage(string json)
+    {
+        var jsonObject = JObject.Parse(json);
+        var typeString = jsonObject["MessageType"]?.ToString();
+
+        if (!Enum.TryParse(typeString, true, out MessageType messageType))
+        {
+            throw new Exception("Unknown type");
+        }
+
+        return messageType switch
+        {
+            MessageType.LoginRequest => JsonConvert.DeserializeObject<WebsocketMessage<LoginRequest>>(json),
+            MessageType.LoginResponse => JsonConvert.DeserializeObject<WebsocketMessage<LoginResponse>>(json),
+            MessageType.MessageResponse => JsonConvert.DeserializeObject<WebsocketMessage<MessageResponse>>(json),
+            _ => null
+        };
     }
 }
