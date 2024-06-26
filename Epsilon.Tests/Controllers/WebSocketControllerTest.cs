@@ -33,7 +33,7 @@ public class WebSocketControllerTest
         _mockHttpContext
             .Setup(context => context.WebSockets)
             .Returns(_mockWebSocketManager.Object);
-        
+
         _websocketStateService
             .Setup(service => service.GetWebsocketState(It.IsAny<string>()))
             .Returns(_fixture.Create<WebsocketState>());
@@ -119,7 +119,7 @@ public class WebSocketControllerTest
 
         var message = _fixture.Create<WebsocketMessage<LoginRequest>>();
         replay.OnNext(message);
-        
+
         _mockWebSocket
             .Setup(socket => socket.ReceiveAsync(It.IsAny<ArraySegment<byte>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new WebSocketReceiveResult(
@@ -133,7 +133,7 @@ public class WebSocketControllerTest
         await _webSocketController.WebSocket();
 
         var messageBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
-        
+
         _mockWebSocket.Verify(socket =>
             socket.SendAsync(new ArraySegment<byte>(messageBytes, 0, messageBytes.Length), WebSocketMessageType.Text, true, It.IsAny<CancellationToken>())
         );
