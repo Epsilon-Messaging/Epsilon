@@ -33,6 +33,8 @@ public class WebsocketMessageHandler : IWebsocketMessageHandler
             case MessageType.LoginRequest:
                 HandleData(JsonConvert.DeserializeObject<WebsocketMessage<LoginRequest>>(message)?.Data, sessionId);
                 return;
+            default:
+                throw new Exception($"No valid handler for {messageType}");
         }
     }
 
@@ -41,6 +43,10 @@ public class WebsocketMessageHandler : IWebsocketMessageHandler
         if (loginRequest == null) return;
         _logger.Information("Received Login request for " + sessionId);
 
-        _websocketStateService.SetWebsocketState(sessionId, new WebsocketState(loginRequest.Username, true));
+        _websocketStateService.SetWebsocketState(sessionId, _websocketStateService.GetWebsocketState(sessionId) with
+        {
+            Username = loginRequest.Username,
+            IsLoggedIn = true
+        });
     }
 }

@@ -1,4 +1,3 @@
-using System.Reactive.Subjects;
 using Epsilon.Models;
 using Epsilon.Services.WebsocketStateService;
 
@@ -6,8 +5,6 @@ namespace Epsilon;
 
 public class MessageService : BackgroundService
 {
-    public static ReplaySubject<WebsocketMessage<MessageResponse>> OutgoingMessages = new();
-
     private readonly IWebsocketStateService _websocketStateService;
 
     public MessageService(IWebsocketStateService websocketStateService)
@@ -21,7 +18,7 @@ public class MessageService : BackgroundService
         {
             foreach (var websocketState in _websocketStateService.GetAllActiveWebsockets())
             {
-                OutgoingMessages.OnNext(new WebsocketMessage<MessageResponse>(MessageType.MessageResponse,
+                websocketState.OutgoingMessages.OnNext(new WebsocketMessage<MessageResponse>(MessageType.MessageResponse,
                     new MessageResponse($"Hello {websocketState.Username}", websocketState.Username)
                 ));
             }

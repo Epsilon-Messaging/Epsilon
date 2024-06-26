@@ -1,3 +1,4 @@
+using System.Reactive.Subjects;
 using Epsilon.Handler.WebsocketMessageHandler;
 using Epsilon.Models;
 using Epsilon.Services.WebsocketStateService;
@@ -19,14 +20,18 @@ public class WebsocketMessageHandlerTest
     }
 
     [Fact]
-    public void a()
+    public void WebsocketMessageHandler_ShouldSetUsername_WhenWeSendALoginRequest()
     {
         var loginRequest = new WebsocketMessage<LoginRequest>(MessageType.LoginRequest, new LoginRequest("MyUsername"));
         var json = JsonConvert.SerializeObject(loginRequest);
         _websocketMessageHandler.HandleMessage(json, "1");
 
         _websocketStateService.Verify(service =>
-            service.SetWebsocketState("1", new WebsocketState("MyUsername", true))
+            service.SetWebsocketState("1", new WebsocketState(
+                "MyUsername",
+                true,
+                new ReplaySubject<WebsocketMessage<MessageResponse>>()
+            ))
         );
     }
 }

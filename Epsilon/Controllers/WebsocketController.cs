@@ -2,7 +2,6 @@ using System.Net.WebSockets;
 using System.Reactive.Linq;
 using System.Text;
 using Epsilon.Handler.WebsocketMessageHandler;
-using Epsilon.Models;
 using Epsilon.Services.WebsocketStateService;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -34,10 +33,9 @@ public class WebSocketController : ControllerBase
         var buffer = new byte[1024 * 4];
         var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
-        MessageService.OutgoingMessages.AsObservable()
-            .Where(message => message.MessageType == MessageType.MessageResponse)
-            .Where(message =>
-                message.Data.Username.Equals(_websocketStateService.GetWebsocketState(sessionId).Username))
+        _websocketStateService.CreateWebsocket(sessionId);
+
+        var subscription = _websocketStateService.GetWebsocketState(sessionId).OutgoingMessages.AsObservable()
             .Subscribe(message => _ = SendMessageAsync(message, webSocket));
 
         while (!result.CloseStatus.HasValue)
@@ -49,10 +47,11 @@ public class WebSocketController : ControllerBase
         }
 
         _websocketStateService.DeleteWebsocket(sessionId);
+        subscription.Dispose();
         await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
     }
 
-    private static async Task SendMessageAsync(WebsocketMessage<MessageResponse> websocketMessage, WebSocket webSocket)
+    private static async Task SendMessageAsync(object websocketMessage, WebSocket webSocket)
     {
         var buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(websocketMessage));
         await webSocket.SendAsync(
