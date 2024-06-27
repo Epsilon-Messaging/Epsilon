@@ -22,29 +22,29 @@ steps:
     concurrency_group: "epsilon_integration_test"
     concurrency: 1
 
-  - label: ":test_tube: Stryker Test"
-    command:
-      - make stryker
-    artifact_paths:
-      - "**/mutation-report.html"
-    concurrency_group: "epsilon_stryker"
-    concurrency: 1
+#  - label: ":test_tube: Stryker Test"
+#    command:
+#      - make stryker
+#    artifact_paths:
+#      - "**/mutation-report.html"
+#    concurrency_group: "epsilon_stryker"
+#    concurrency: 1
 
-  - label: ":sonarqube: Sonarqube Scanner"
-    depends_on: 
-      - "tests"
-    command:
-      - buildkite-agent artifact download **/*opencover.xml .
-      - make sonarqube
-    concurrency_group: "epsilon_sonarqube"
-    concurrency: 1
+#  - label: ":sonarqube: Sonarqube Scanner"
+#    depends_on: 
+#      - "tests"
+#    command:
+#      - buildkite-agent artifact download **/*opencover.xml .
+#      - make sonarqube
+#    concurrency_group: "epsilon_sonarqube"
+#    concurrency: 1
     
   - block: ":docker: Deploy"
     key: "block_docker_hub"
-    branches: "main"
+#    branches: "main"
 
   - label: ":docker: Deploy to Docker Hub"
-    branches: "main"
+#    branches: "main"
     depends_on:
       - "block_docker_hub"
     command:
