@@ -25,7 +25,7 @@ public class WebsocketMessageHandler : IWebsocketMessageHandler
 
         if (!Enum.TryParse(typeString, true, out MessageType messageType))
         {
-            throw new Exception("Unknown type");
+            return;
         }
 
         switch (messageType)

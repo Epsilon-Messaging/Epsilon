@@ -1,8 +1,8 @@
-using System.Reactive.Subjects;
 using AutoFixture;
 using Epsilon.Handler.WebsocketMessageHandler;
 using Epsilon.Models;
 using Epsilon.Services.WebsocketStateService;
+using FluentAssertions;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
@@ -23,6 +23,17 @@ public class WebsocketMessageHandlerTest
             .Returns(_fixture.Create<WebsocketState>());
 
         _websocketMessageHandler = new WebsocketMessageHandler(_websocketStateService.Object);
+    }
+
+    [Theory]
+    [InlineData("{}")]
+    [InlineData("{\"MessageType\":\"Invalid\"}")]
+    [InlineData("{\"MessageType\":\"Login\", \"Data\": null}")]
+    public void WebsocketMessageHandler_ShouldDoNothing_WhenWeSendAnInvalidMessage(string message)
+    {
+        var action = () => _websocketMessageHandler.HandleMessage(message, "1");
+
+        action.Should().NotThrow();
     }
 
     [Fact]
