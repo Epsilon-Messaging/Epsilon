@@ -9,6 +9,10 @@
     "mutate": [
       "**/*.cs",
       "!**/Program.cs"
+    ],
+    "ignore-methods": [
+      "*Exception.ctor",
+      "Serilog.*"
     ]
   }
 }

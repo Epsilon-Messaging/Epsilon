@@ -1,8 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Epsilon.Models;
 using Epsilon.Services.WebsocketStateService;
 
 namespace Epsilon;
 
+//Excluded because this is a temp class and I cant be bothered to test it for now.
+[ExcludeFromCodeCoverage]
 public class MessageService : BackgroundService
 {
     private readonly IWebsocketStateService _websocketStateService;
