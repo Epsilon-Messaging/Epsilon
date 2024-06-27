@@ -10,9 +10,12 @@
       "**/*.cs",
       "!**/Program.cs"
     ],
+    "test-case-filter": "FullyQualifiedName!~Integration",
     "ignore-methods": [
       "*Exception.ctor",
-      "Serilog.*"
+      "Information",
+      "Debug",
+      "Delay"
     ]
   }
 }
