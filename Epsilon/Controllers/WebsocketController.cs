@@ -5,6 +5,8 @@ using Epsilon.Handler.WebsocketMessageHandler;
 using Epsilon.Services.WebsocketStateService;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace Epsilon.Controllers;
 
@@ -14,6 +16,8 @@ public class WebSocketController : ControllerBase
 {
     private readonly IWebsocketStateService _websocketStateService;
     private readonly IWebsocketMessageHandler _websocketMessageHandler;
+
+    private readonly ILogger _logger = Log.ForContext<WebSocketController>();
 
     public WebSocketController(
         IWebsocketStateService websocketStateService,
@@ -49,6 +53,8 @@ public class WebSocketController : ControllerBase
         _websocketStateService.DeleteWebsocket(sessionId);
         subscription.Dispose();
         await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+
+        _logger.Debug("Logging out {SessionID}", sessionId);
     }
 
     private static async Task SendMessageAsync(object websocketMessage, WebSocket webSocket)

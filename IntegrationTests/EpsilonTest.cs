@@ -6,22 +6,33 @@ namespace IntegrationTests;
 public class EpsilonTest
 {
     [Fact]
-    public async Task Epsilon_ShouldEchoMessagesBack_WhenItReceivesOneFromTheWebsocket()
+    public async Task Epsilon_ShouldSendMessageToUser_WhenWeAreLoggedOn()
     {
-        var websocket = new WebSocketTestClient();
-        await websocket.Connect("ws://localhost:5172/api/websocket");
+        var websocket1 = new WebSocketTestClient();
+        var websocket2 = new WebSocketTestClient();
+        await websocket1.Connect("ws://localhost:5172/api/websocket");
+        await websocket2.Connect("ws://localhost:5172/api/websocket");
 
-        await websocket.Send(
-            new WebsocketMessage<LoginRequest>(MessageType.LoginRequest, new LoginRequest("Peaches_MLG"))
+        await websocket1.Send(
+            new WebsocketMessage<LoginRequest>(MessageType.LoginRequest, new LoginRequest("User1"))
         );
 
-        await websocket.ReceivedMessages()
+        await websocket2.Send(
+            new WebsocketMessage<LoginRequest>(MessageType.LoginRequest, new LoginRequest("User2"))
+        );
+
+        await websocket1.Send(
+            new WebsocketMessage<MessageRequest>(MessageType.MessageRequest, new MessageRequest("Hello :)", "User2"))
+        );
+
+        await websocket2.ReceivedMessages()
             .Should()
             .PushMatchAsync(s => s.Equals(new WebsocketMessage<MessageResponse>(
                 MessageType.MessageResponse,
-                new MessageResponse("Hello Peaches_MLG", "Peaches_MLG"))
+                new MessageResponse("Hello :)", "User1"))
             ), TimeSpan.FromSeconds(10));
 
-        await websocket.Disconnect();
+        await websocket1.Disconnect();
+        await websocket2.Disconnect();
     }
 }

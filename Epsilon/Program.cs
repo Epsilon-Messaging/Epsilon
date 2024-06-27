@@ -15,8 +15,6 @@ builder.Services.AddControllers();
 builder.Services.AddTransient<IWebsocketMessageHandler, WebsocketMessageHandler>();
 builder.Services.AddSingleton<IWebsocketStateService, WebsocketStateService>();
 
-builder.Services.AddHostedService<MessageService>();
-
 builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
 var app = builder.Build();
 
