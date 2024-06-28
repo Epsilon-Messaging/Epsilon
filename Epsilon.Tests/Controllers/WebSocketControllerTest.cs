@@ -16,7 +16,7 @@ namespace Epsilon.Tests.Controllers;
 
 public class WebSocketControllerTest
 {
-    private readonly Mock<IWebsocketMessageHandler> _mockWebsocketMessageHandler = new();
+    private readonly Mock<IMessageHandler<string>> _mockWebsocketMessageHandler = new();
     private readonly Mock<IWebsocketStateService> _websocketStateService = new();
     private readonly Mock<HttpContext> _mockHttpContext = new();
     private readonly Mock<WebSocketManager> _mockWebSocketManager = new();

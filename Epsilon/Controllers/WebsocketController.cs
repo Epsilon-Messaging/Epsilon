@@ -15,13 +15,13 @@ namespace Epsilon.Controllers;
 public class WebSocketController : ControllerBase
 {
     private readonly IWebsocketStateService _websocketStateService;
-    private readonly IWebsocketMessageHandler _websocketMessageHandler;
+    private readonly IMessageHandler<string> _websocketMessageHandler;
 
     private readonly ILogger _logger = Log.ForContext<WebSocketController>();
 
     public WebSocketController(
         IWebsocketStateService websocketStateService,
-        IWebsocketMessageHandler websocketMessageHandler
+        IMessageHandler<string> websocketMessageHandler
     )
     {
         _websocketStateService = websocketStateService;
