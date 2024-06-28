@@ -21,7 +21,7 @@ public class WebsocketStateService : IWebsocketStateService
     {
         return _websocketStates.TryGetValue(sessionId, out var websocketState)
             ? websocketState
-            : throw new Exception($"No valid session for {sessionId}");
+            : throw new ArgumentException($"No valid session for {sessionId}");
     }
 
     public List<WebsocketState> GetAllActiveWebsockets()

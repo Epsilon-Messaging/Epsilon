@@ -109,7 +109,7 @@ public class WebSocketTestClient
 
         if (!Enum.TryParse(typeString, true, out MessageType messageType))
         {
-            throw new Exception("Unknown type");
+            throw new ArgumentException($"Unknown type {messageType}");
         }
 
         return messageType switch
