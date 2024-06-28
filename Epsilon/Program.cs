@@ -1,3 +1,7 @@
+using Epsilon;
+using Epsilon.Handler.WebsocketMessageHandler;
+using Epsilon.Models;
+using Epsilon.Services.WebsocketStateService;
 using Serilog;
 using static Epsilon.EnvironmentVariables;
 
@@ -9,6 +13,10 @@ builder.Configuration
 
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
+builder.Services.AddTransient<IMessageHandler<string>, WebsocketMessageHandler>();
+builder.Services.AddTransient<IMessageHandler<LoginRequest>, LoginRequestMessageHandler>();
+builder.Services.AddTransient<IMessageHandler<MessageRequest>, MessageRequestMessageHandler>();
+builder.Services.AddSingleton<IWebsocketStateService, WebsocketStateService>();
 
 builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
 var app = builder.Build();
