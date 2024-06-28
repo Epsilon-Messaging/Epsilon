@@ -34,7 +34,7 @@ public class WebsocketStateServiceTest
 
         _websocketStateService.DeleteWebsocket(sessionId);
 
-        Assert.Throws<Exception>(() => _websocketStateService.GetWebsocketState(sessionId));
+        Assert.Throws<ArgumentException>(() => _websocketStateService.GetWebsocketState(sessionId));
     }
 
     [Fact]
