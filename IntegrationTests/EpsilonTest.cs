@@ -22,7 +22,7 @@ public class EpsilonTest
         );
 
         await Task.Delay(1000);
-        
+
         websocket2.ReceivedMessages()
             .Should()
             .NotPush();
@@ -30,7 +30,7 @@ public class EpsilonTest
         await websocket1.Disconnect();
         await websocket2.Disconnect();
     }
-    
+
     [Fact]
     public async Task Epsilon_ShouldSendMessageToUser_WhenWeAreLoggedOn()
     {
@@ -38,7 +38,7 @@ public class EpsilonTest
         var websocket2 = new WebSocketTestClient();
         await websocket1.Connect("ws://localhost:5172/api/websocket");
         await websocket2.Connect("ws://localhost:5172/api/websocket");
-        
+
         await websocket2.Send(
             new WebsocketMessage<LoginRequest>(MessageType.LoginRequest, new LoginRequest("User2"))
         );
@@ -61,7 +61,7 @@ public class EpsilonTest
         await websocket1.Disconnect();
         await websocket2.Disconnect();
     }
-    
+
     [Fact]
     public async Task Epsilon_ShouldNotSendMessageToUser_WhenUsernamesDontMatch()
     {
@@ -83,7 +83,7 @@ public class EpsilonTest
         );
 
         await Task.Delay(1000);
-        
+
         websocket2.ReceivedMessages()
             .Should()
             .NotPush();

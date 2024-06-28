@@ -68,7 +68,7 @@ public class MessageRequestMessageHandlerTest
             });
 
         _messageRequestMessageHandler.HandleMessage(messageRequest, sessionId);
-        
+
         foreach (var websocketState in _websocketStates)
         {
             websocketState.OutgoingMessages.AsObservable().Observe().Should().NotPush();
