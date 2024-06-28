@@ -34,7 +34,7 @@ public class WebsocketMessageHandlerTest
     public void WebsocketMessageHandler_ShouldDoNothing_WhenWeSendAnInvalidMessage(string? message)
     {
         var sessionId = Guid.NewGuid().ToString();
-        
+
         var action = () => _websocketMessageHandler.HandleMessage(message, sessionId);
 
         action.Should().NotThrow();
@@ -48,7 +48,7 @@ public class WebsocketMessageHandlerTest
             MessageType = MessageType.LoginRequest
         };
         var sessionId = Guid.NewGuid().ToString();
-        
+
         _websocketMessageHandler.HandleMessage(JsonConvert.SerializeObject(loginRequest), sessionId);
 
         _loginRequestHandler.Verify(service =>
@@ -64,7 +64,7 @@ public class WebsocketMessageHandlerTest
             MessageType = MessageType.MessageRequest
         };
         var sessionId = Guid.NewGuid().ToString();
-        
+
         _websocketMessageHandler.HandleMessage(JsonConvert.SerializeObject(loginRequest), sessionId);
 
         _messageRequestHandler.Verify(service =>
