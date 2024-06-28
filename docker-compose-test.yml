@@ -22,3 +22,17 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    depends_on:
+      - dbPostgres
+    network_mode: service:dbPostgres
+      
+  dbPostgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: EpsilonDB
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./data:/var/lib/postgresql/data
