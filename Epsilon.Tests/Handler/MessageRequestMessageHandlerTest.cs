@@ -20,18 +20,18 @@ public class MessageRequestMessageHandlerTest
     public MessageRequestMessageHandlerTest()
     {
         _websocketStates = _fixture.CreateMany<WebsocketState>().ToList();
-        
+
         _websocketStateService
             .Setup(service => service.GetWebsocketState(It.IsAny<string>()))
             .Returns(_fixture.Create<WebsocketState>() with
             {
                 IsLoggedIn = true
             });
-        
+
         _websocketStateService
             .Setup(service => service.GetAllActiveWebsockets())
             .Returns(_websocketStates);
-        
+
         _messageRequestMessageHandler = new MessageRequestMessageHandler(
             _websocketStateService.Object
         );
@@ -41,7 +41,7 @@ public class MessageRequestMessageHandlerTest
     public void MessageRequestMessageHandler_ShouldDoNothing_WhenMessageRequestIsNull()
     {
         var sessionId = Guid.NewGuid().ToString();
-        
+
         var action = () => _messageRequestMessageHandler.HandleMessage(null, sessionId);
 
         action.Should().NotThrow();
@@ -56,12 +56,12 @@ public class MessageRequestMessageHandlerTest
             {
                 IsLoggedIn = false
             });
-        
+
         var messageRequest = _fixture.Create<MessageRequest>();
         var sessionId = Guid.NewGuid().ToString();
-        
+
         _messageRequestMessageHandler.HandleMessage(messageRequest, sessionId);
-        
+
         foreach (var websocketState in _websocketStates)
         {
             websocketState.OutgoingMessages.AsObservable().Observe().Should().NotPush();
@@ -79,7 +79,7 @@ public class MessageRequestMessageHandlerTest
             Username = recipient,
             IsLoggedIn = true
         });
-        
+
         _websocketStateService
             .Setup(service => service.GetWebsocketState(It.IsAny<string>()))
             .Returns(_fixture.Create<WebsocketState>() with
@@ -87,9 +87,9 @@ public class MessageRequestMessageHandlerTest
                 IsLoggedIn = true,
                 Username = "MyUsername"
             });
-        
+
         _messageRequestMessageHandler.HandleMessage(messageRequest, sessionId);
-        
+
         foreach (var websocketState in _websocketStates)
         {
             if (websocketState.Username == recipient)
@@ -102,7 +102,7 @@ public class MessageRequestMessageHandlerTest
             }
             else
             {
-                websocketState.OutgoingMessages.AsObservable().Observe().Should().NotPush();   
+                websocketState.OutgoingMessages.AsObservable().Observe().Should().NotPush();
             }
         }
     }

@@ -20,7 +20,7 @@ public class LoginRequestMessageHandlerTest
         _websocketStateService
             .Setup(service => service.GetWebsocketState(It.IsAny<string>()))
             .Returns(_fixture.Create<WebsocketState>());
-        
+
         _loginRequestMessageHandler = new LoginRequestMessageHandler(
             _websocketStateService.Object
         );
@@ -30,7 +30,7 @@ public class LoginRequestMessageHandlerTest
     public void LoginRequestMessageHandler_ShouldDoNothing_WhenLoginRequestIsNull()
     {
         var sessionId = Guid.NewGuid().ToString();
-        
+
         var action = () => _loginRequestMessageHandler.HandleMessage(null, sessionId);
 
         action.Should().NotThrow();
@@ -41,7 +41,7 @@ public class LoginRequestMessageHandlerTest
     {
         var loginRequest = _fixture.Create<LoginRequest>();
         var sessionId = Guid.NewGuid().ToString();
-        
+
         _loginRequestMessageHandler.HandleMessage(loginRequest, sessionId);
 
         _websocketStateService.Verify(service =>

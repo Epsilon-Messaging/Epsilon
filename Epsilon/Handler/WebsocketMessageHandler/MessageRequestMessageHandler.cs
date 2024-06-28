@@ -14,7 +14,7 @@ public class MessageRequestMessageHandler : IMessageHandler<MessageRequest>
     {
         _websocketStateService = websocketStateService;
     }
-    
+
     public void HandleMessage(MessageRequest? message, string sessionId)
     {
         if (message == null) return;
