@@ -36,10 +36,4 @@
         <ProjectReference Include="..\Epsilon\Epsilon.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="FluentAssertions.Reactive">
-        <HintPath>..\..\..\.nuget\packages\fluentassertions.reactive\0.2.0\lib\netstandard2.0\FluentAssertions.Reactive.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
 </Project>
