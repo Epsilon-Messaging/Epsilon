@@ -37,12 +37,10 @@ public class WebsocketMessageHandler : IMessageHandler<string>
             switch (messageType)
             {
                 case MessageType.LoginRequest:
-                    _loginRequestHandler.HandleMessage(
-                        JsonConvert.DeserializeObject<WebsocketMessage<LoginRequest>>(message)?.Data, sessionId);
+                    _loginRequestHandler.HandleMessage(JsonConvert.DeserializeObject<WebsocketMessage<LoginRequest>>(message)?.Data, sessionId);
                     return;
                 case MessageType.MessageRequest:
-                    _messageRequestHandler.HandleMessage(
-                        JsonConvert.DeserializeObject<WebsocketMessage<MessageRequest>>(message)?.Data, sessionId);
+                    _messageRequestHandler.HandleMessage(JsonConvert.DeserializeObject<WebsocketMessage<MessageRequest>>(message)?.Data, sessionId);
                     return;
                 default:
                     return;
