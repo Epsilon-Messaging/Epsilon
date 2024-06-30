@@ -1,1 +1,1 @@
-dotnet run -c Release --project $1
+dotnet run -c Release --project $1 --launch-profile integration_test
