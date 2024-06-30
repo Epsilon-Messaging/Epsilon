@@ -17,7 +17,9 @@ builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
 builder.Services.AddTransient<IUserManager, UserManager>();
 builder.Services.AddTransient<IMessageManager, MessageManager>();
-builder.Services.AddDbContext<EpsilonDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<EpsilonDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 builder.Services.AddTransient<IMessageHandler<string>, WebsocketMessageHandler>();
 builder.Services.AddTransient<IMessageHandler<LoginRequest>, LoginRequestMessageHandler>();
 builder.Services.AddTransient<IMessageHandler<MessageRequest>, MessageRequestMessageHandler>();

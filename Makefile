@@ -23,6 +23,9 @@ down:
 	echo "Down"
 	docker-compose -f docker-compose-test.yml down
 	
+services:
+	docker-compose -f docker-compose-postgres.yml up
+	
 send_logs:
 	.buildkite/scripts/docker-logs.sh
 	make down
