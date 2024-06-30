@@ -9,7 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration
     .AddJsonFile("appsettings.json", false, true)
-    .AddJsonFile($"appsettings.{ASPNETCORE_ENVIRONMENT}.json", true, true);
+    .AddJsonFile($"appsettings.{ASPNETCORE_ENVIRONMENT}.json", true, true)
+    .AddEnvironmentVariables();
 
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
