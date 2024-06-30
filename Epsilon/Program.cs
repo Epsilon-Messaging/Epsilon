@@ -1,4 +1,6 @@
 using Epsilon;
+using Epsilon.Data;
+using Microsoft.EntityFrameworkCore;
 using Epsilon.Handler.WebsocketMessageHandler;
 using Epsilon.Models;
 using Epsilon.Services.WebsocketStateService;
@@ -14,6 +16,11 @@ builder.Configuration
 
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
+builder.Services.AddTransient<IUserManager, UserManager>();
+builder.Services.AddTransient<IMessageManager, MessageManager>();
+builder.Services.AddDbContext<EpsilonDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 builder.Services.AddTransient<IMessageHandler<string>, WebsocketMessageHandler>();
 builder.Services.AddTransient<IMessageHandler<LoginRequest>, LoginRequestMessageHandler>();
 builder.Services.AddTransient<IMessageHandler<MessageRequest>, MessageRequestMessageHandler>();
@@ -30,5 +37,11 @@ app.UseWebSockets(new WebSocketOptions
 {
     KeepAliveInterval = TimeSpan.FromSeconds(30),
 });
+
+// Migrate db
+DatabaseInitializer.Migrate(app);
+
+// Seed database
+DatabaseInitializer.Seed(app);
 
 await app.RunAsync();

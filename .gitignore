@@ -1,3 +1,6 @@
 */obj/
 */bin/
 .idea
+
+# Postgres data
+data/
