@@ -5,4 +5,4 @@ namespace Epsilon.Models;
 
 
 [ExcludeFromCodeCoverage]
-public record WebsocketState(string Username, bool IsLoggedIn, ReplaySubject<object> OutgoingMessages);
+public record WebsocketState(string Username, string PublicKey, string SystemPrivateKey, bool IsLoggedIn, Guid ChallangeToken, ReplaySubject<object> OutgoingMessages);

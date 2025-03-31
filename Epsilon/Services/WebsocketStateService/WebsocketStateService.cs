@@ -12,7 +12,10 @@ public class WebsocketStateService : IWebsocketStateService
     {
         SetWebsocketState(sessionId, new WebsocketState(
             "",
+            "",
+            "",
             false,
+            Guid.NewGuid(),
             new ReplaySubject<object>())
         );
     }

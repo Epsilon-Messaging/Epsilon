@@ -3,9 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 namespace Epsilon.Models;
 
 [ExcludeFromCodeCoverage]
-public record LoginResponse(bool Success, string Reason)
+public record LoginResponse(string ChallangeToken, string SystemPublic)
 {
-    public LoginResponse() : this(true, "")
+    public LoginResponse() : this("", "")
     {
     }
 }

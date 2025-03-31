@@ -1,26 +1,16 @@
 using Epsilon.Models;
-using Epsilon.Services.WebsocketStateService;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Serilog;
-using ILogger = Serilog.ILogger;
 
 namespace Epsilon.Handler.WebsocketMessageHandler;
 
-public class WebsocketMessageHandler : IMessageHandler<string>
+public class WebsocketMessageHandler(
+    IMessageHandler<LoginRequest> loginRequestHandler,
+    IMessageHandler<MessageRequest> messageRequestHandler,
+    IMessageHandler<ChallengeRequest> challengeRequestHandler
+)
+    : IMessageHandler<string>
 {
-    private readonly IMessageHandler<LoginRequest> _loginRequestHandler;
-    private readonly IMessageHandler<MessageRequest> _messageRequestHandler;
-
-    public WebsocketMessageHandler(
-        IMessageHandler<LoginRequest> loginRequestHandler,
-        IMessageHandler<MessageRequest> messageRequestHandler
-    )
-    {
-        _loginRequestHandler = loginRequestHandler;
-        _messageRequestHandler = messageRequestHandler;
-    }
-
     public void HandleMessage(string? message, string sessionId)
     {
         try
@@ -37,10 +27,16 @@ public class WebsocketMessageHandler : IMessageHandler<string>
             switch (messageType)
             {
                 case MessageType.LoginRequest:
-                    _loginRequestHandler.HandleMessage(JsonConvert.DeserializeObject<WebsocketMessage<LoginRequest>>(message)?.Data, sessionId);
+                    loginRequestHandler.HandleMessage(
+                        JsonConvert.DeserializeObject<WebsocketMessage<LoginRequest>>(message)?.Data, sessionId);
                     return;
                 case MessageType.MessageRequest:
-                    _messageRequestHandler.HandleMessage(JsonConvert.DeserializeObject<WebsocketMessage<MessageRequest>>(message)?.Data, sessionId);
+                    messageRequestHandler.HandleMessage(
+                        JsonConvert.DeserializeObject<WebsocketMessage<MessageRequest>>(message)?.Data, sessionId);
+                    return;
+                case MessageType.ChallengeRequest:
+                    challengeRequestHandler.HandleMessage(
+                        JsonConvert.DeserializeObject<WebsocketMessage<ChallengeRequest>>(message)?.Data, sessionId);
                     return;
                 default:
                     return;

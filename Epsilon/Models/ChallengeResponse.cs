@@ -3,9 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 namespace Epsilon.Models;
 
 [ExcludeFromCodeCoverage]
-public record MessageRequest(string Message, string PublicKey)
+public record ChallengeResponse(bool Success)
 {
-    public MessageRequest() : this("", "")
+    public ChallengeResponse() : this(true)
     {
     }
 }

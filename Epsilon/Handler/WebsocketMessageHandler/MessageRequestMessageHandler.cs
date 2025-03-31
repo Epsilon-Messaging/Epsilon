@@ -27,14 +27,14 @@ public class MessageRequestMessageHandler : IMessageHandler<MessageRequest>
         _logger.Debug("Sending message {@MessageRequest}", message);
 
         var recipients = _websocketStateService.GetAllActiveWebsockets()
-            .Where(state => state.Username == message.Username)
+            .Where(state => state.PublicKey == message.PublicKey)
             .Select(state => state.OutgoingMessages)
             .ToList();
 
         foreach (var recipient in recipients)
         {
             recipient.OnNext(new WebsocketMessage<MessageResponse>(MessageType.MessageResponse,
-                new MessageResponse(message.Message, sessionState.Username)
+                new MessageResponse(message.Message, sessionState.PublicKey, sessionState.Username)
             ));
         }
     }
