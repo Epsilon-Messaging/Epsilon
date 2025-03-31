@@ -28,6 +28,7 @@ public class MessageRequestMessageHandler : IMessageHandler<MessageRequest>
 
         var recipients = _websocketStateService.GetAllActiveWebsockets()
             .Where(state => state.PublicKey == message.PublicKey)
+            .Where(state => state.IsLoggedIn)
             .Select(state => state.OutgoingMessages)
             .ToList();
 
