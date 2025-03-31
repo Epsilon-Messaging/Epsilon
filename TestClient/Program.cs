@@ -82,7 +82,7 @@ async void HandleMessages(object message)
             Encryption.ReadPublicKey(messageResponse.Data.PublicKey)
         );
 
-        Console.WriteLine(messageResponse.Data.Username+": " + decryptedMessage);
-        
+        Console.WriteLine(messageResponse.Data.Username + ": " + decryptedMessage);
+
     }
 }
