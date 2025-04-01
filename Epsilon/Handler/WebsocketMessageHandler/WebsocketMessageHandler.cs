@@ -1,3 +1,4 @@
+using System.Net.WebSockets;
 using Common.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -43,6 +44,10 @@ public class WebsocketMessageHandler(
             }
         }
         catch (JsonException)
+        {
+            // Do nothing and ignore error
+        }
+        catch (WebSocketException)
         {
             // Do nothing and ignore error
         }
