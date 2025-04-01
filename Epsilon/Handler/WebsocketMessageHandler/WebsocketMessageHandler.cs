@@ -47,9 +47,5 @@ public class WebsocketMessageHandler(
         {
             // Do nothing and ignore error
         }
-        catch (WebSocketException)
-        {
-            // Do nothing and ignore error
-        }
     }
 }
