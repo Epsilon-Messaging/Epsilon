@@ -1,7 +1,7 @@
 using System.Reactive.Linq;
 using AutoFixture;
+using Common.Models;
 using Epsilon.Handler.WebsocketMessageHandler;
-using Epsilon.Models;
 using Epsilon.Services.WebsocketStateService;
 using FluentAssertions;
 using FluentAssertions.Reactive;
@@ -78,12 +78,14 @@ public class MessageRequestMessageHandlerTest
     [Fact]
     public void MessageRequestMessageHandler_ShouldSendMessage_WhenWeAreLoggedIn()
     {
-        const string recipient = "Recipient";
-        var messageRequest = new MessageRequest("Hello :)", recipient);
+        const string publicKey = "PublicKey";
+        const string username = "MyUsername";
+        var messageRequest = new MessageRequest("Hello :)", publicKey);
         var sessionId = Guid.NewGuid().ToString();
         _websocketStates.Add(_fixture.Create<WebsocketState>() with
         {
-            Username = recipient,
+            Username = username,
+            PublicKey = publicKey,
             IsLoggedIn = true
         });
 
@@ -92,19 +94,20 @@ public class MessageRequestMessageHandlerTest
             .Returns(_fixture.Create<WebsocketState>() with
             {
                 IsLoggedIn = true,
-                Username = "MyUsername"
+                Username = username,
+                PublicKey = publicKey
             });
 
         _messageRequestMessageHandler.HandleMessage(messageRequest, sessionId);
 
         foreach (var websocketState in _websocketStates)
         {
-            if (websocketState.Username == recipient)
+            if (websocketState.PublicKey == publicKey)
             {
                 websocketState.OutgoingMessages.AsObservable().Observe().Should()
                     .PushMatch(s => s.Equals(new WebsocketMessage<MessageResponse>(
                         MessageType.MessageResponse,
-                        new MessageResponse("Hello :)", "MyUsername"))
+                        new MessageResponse("Hello :)", publicKey, username))
                     ));
             }
             else

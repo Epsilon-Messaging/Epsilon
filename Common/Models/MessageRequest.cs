@@ -1,9 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace Epsilon.Models;
+namespace Common.Models;
 
 [ExcludeFromCodeCoverage]
-public record MessageRequest(string Message, string Username)
+public record MessageRequest(string Message, string PublicKey)
 {
     public MessageRequest() : this("", "")
     {

@@ -2,9 +2,9 @@ using System.Net.WebSockets;
 using System.Reactive.Subjects;
 using System.Text;
 using AutoFixture;
+using Common.Models;
 using Epsilon.Controllers;
 using Epsilon.Handler.WebsocketMessageHandler;
-using Epsilon.Models;
 using Epsilon.Services.WebsocketStateService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -121,7 +121,10 @@ public class WebSocketControllerTest
         var replay = new ReplaySubject<object>();
         _websocketStateService
             .Setup(service => service.GetWebsocketState(It.IsAny<string>()))
-            .Returns(new WebsocketState("", false, replay));
+            .Returns(new WebsocketState
+            {
+                OutgoingMessages = replay
+            });
 
         var message = _fixture.Create<WebsocketMessage<LoginRequest>>();
         replay.OnNext(message);
@@ -155,7 +158,10 @@ public class WebSocketControllerTest
         var replay = new ReplaySubject<object>();
         _websocketStateService
             .Setup(service => service.GetWebsocketState(It.IsAny<string>()))
-            .Returns(new WebsocketState("", false, replay));
+            .Returns(new WebsocketState
+            {
+                OutgoingMessages = replay
+            });
 
         _mockWebSocket
             .Setup(socket => socket.ReceiveAsync(It.IsAny<ArraySegment<byte>>(), It.IsAny<CancellationToken>()))

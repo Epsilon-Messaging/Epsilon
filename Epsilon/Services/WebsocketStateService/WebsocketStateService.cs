@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using System.Reactive.Subjects;
-using Epsilon.Models;
+using Common.Models;
 
 namespace Epsilon.Services.WebsocketStateService;
 
@@ -12,7 +12,10 @@ public class WebsocketStateService : IWebsocketStateService
     {
         SetWebsocketState(sessionId, new WebsocketState(
             "",
+            "",
+            "",
             false,
+            Guid.NewGuid(),
             new ReplaySubject<object>())
         );
     }

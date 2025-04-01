@@ -1,6 +1,6 @@
 using AutoFixture;
+using Common.Models;
 using Epsilon.Handler.WebsocketMessageHandler;
-using Epsilon.Models;
 using FluentAssertions;
 using Moq;
 using Newtonsoft.Json;
@@ -11,6 +11,7 @@ namespace Epsilon.Tests.Handler;
 public class WebsocketMessageHandlerTest
 {
     private readonly Mock<IMessageHandler<LoginRequest>> _loginRequestHandler = new();
+    private readonly Mock<IMessageHandler<ChallengeRequest>> _challengeRequestHandler = new();
     private readonly Mock<IMessageHandler<MessageRequest>> _messageRequestHandler = new();
 
     private readonly WebsocketMessageHandler _websocketMessageHandler;
@@ -20,6 +21,7 @@ public class WebsocketMessageHandlerTest
     {
         _websocketMessageHandler = new WebsocketMessageHandler(
             _loginRequestHandler.Object,
+            _challengeRequestHandler.Object,
             _messageRequestHandler.Object
         );
     }
@@ -69,6 +71,22 @@ public class WebsocketMessageHandlerTest
 
         _messageRequestHandler.Verify(service =>
             service.HandleMessage(loginRequest.Data, sessionId)
+        );
+    }
+
+    [Fact]
+    public void WebsocketMessageHandler_ShouldCallChallengeRequestHandler_WhenWeSendAChallengeRequest()
+    {
+        var challengeRequest = _fixture.Create<WebsocketMessage<ChallengeRequest>>() with
+        {
+            MessageType = MessageType.ChallengeRequest
+        };
+        var sessionId = Guid.NewGuid().ToString();
+
+        _websocketMessageHandler.HandleMessage(JsonConvert.SerializeObject(challengeRequest), sessionId);
+
+        _challengeRequestHandler.Verify(service =>
+            service.HandleMessage(challengeRequest.Data, sessionId)
         );
     }
 }

@@ -1,5 +1,4 @@
-using System.Reactive.Subjects;
-using Epsilon.Models;
+using Common.Models;
 using Epsilon.Services.WebsocketStateService;
 using FluentAssertions;
 using Xunit;
@@ -54,11 +53,10 @@ public class WebsocketStateServiceTest
     {
         var sessionId = Guid.NewGuid().ToString();
         _websocketStateService.CreateWebsocket(sessionId);
-        var newWebsocketState = new WebsocketState(
-            "newState",
-            true,
-            new ReplaySubject<object>()
-        );
+        var newWebsocketState = new WebsocketState() with
+        {
+            Username = "Username123"
+        };
 
         _websocketStateService.SetWebsocketState(sessionId, newWebsocketState);
         _websocketStateService.GetWebsocketState(sessionId).Should().Be(newWebsocketState);

@@ -1,10 +1,9 @@
 using AutoFixture;
+using Common.Models;
 using Epsilon.Handler.WebsocketMessageHandler;
-using Epsilon.Models;
 using Epsilon.Services.WebsocketStateService;
 using FluentAssertions;
 using Moq;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace Epsilon.Tests.Handler;
