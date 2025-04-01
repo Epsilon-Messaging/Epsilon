@@ -6,8 +6,8 @@ namespace Epsilon.Handler.WebsocketMessageHandler;
 
 public class WebsocketMessageHandler(
     IMessageHandler<LoginRequest> loginRequestHandler,
-    IMessageHandler<MessageRequest> messageRequestHandler,
-    IMessageHandler<ChallengeRequest> challengeRequestHandler
+    IMessageHandler<ChallengeRequest> challengeRequestHandler,
+    IMessageHandler<MessageRequest> messageRequestHandler
 )
     : IMessageHandler<string>
 {

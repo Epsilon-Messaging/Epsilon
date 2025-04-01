@@ -18,13 +18,21 @@ public class ChallengeRequestMessageHandler(IWebsocketStateService websocketStat
 
         var currentState = websocketStateService.GetWebsocketState(sessionId);
 
-        var decrypted = Encryption.DecryptMessage(
-            message.SignedChallenge,
-            Encryption.ReadPrivateKey(currentState.SystemPrivateKey, sessionId),
-            Encryption.ReadPublicKey(currentState.PublicKey)
-        );
-
-        var success = decrypted == currentState.ChallangeToken.ToString();
+        bool success;
+        try
+        {
+            var decrypted = Encryption.DecryptMessage(
+                message.SignedChallenge,
+                Encryption.ReadPrivateKey(currentState.SystemPrivateKey, sessionId),
+                Encryption.ReadPublicKey(currentState.PublicKey)
+            );
+            success = decrypted == currentState.ChallangeToken.ToString();
+        }
+        catch (Exception exception)
+        {
+            _logger.Error(exception, "Failed to decrypt message");
+            success = false;
+        }
 
         if (success)
         {
