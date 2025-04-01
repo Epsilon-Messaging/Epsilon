@@ -2,22 +2,24 @@ using System.Net.WebSockets;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
-using Epsilon.Models;
+using Common.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace TestClient;
+namespace Common;
 
 public class TestClient
 {
     private readonly ClientWebSocket _webSocket = new();
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private Task _receivingTask = Task.CompletedTask;
-    private readonly ReplaySubject<object> _recievedMessages = new();
+    private readonly ReplaySubject<LoginResponse> _loginResponses = new();
+    private readonly ReplaySubject<ChallengeResponse> _challengeResponse = new();
+    private readonly ReplaySubject<MessageResponse> _messageResponse = new();
 
-    public IObservable<object> ReceivedMessages()
+    public IObservable<MessageResponse> MessageResponses()
     {
-        return _recievedMessages.AsObservable();
+        return _messageResponse.AsObservable();
     }
 
     public async Task Connect(string uri)
@@ -34,6 +36,18 @@ public class TestClient
         }
     }
 
+    public async Task<bool> Login(string publicKey, string privateKey, string username, string password)
+    {
+        await Send(
+            new WebsocketMessage<LoginRequest>(MessageType.LoginRequest, new LoginRequest(publicKey, username))
+        );
+
+        var loginResponse = await _loginResponses.FirstAsync();
+        await HandleLoginResponse(loginResponse, privateKey, password);
+        var challengeResponse = await _challengeResponse.FirstAsync();
+        return challengeResponse.Success;
+    }
+
     public async Task Send(object content)
     {
         if (_webSocket.State == WebSocketState.Open)
@@ -41,7 +55,6 @@ public class TestClient
             var json = JsonConvert.SerializeObject(content);
             var bytesToSend = new ArraySegment<byte>(Encoding.UTF8.GetBytes(json));
             await _webSocket.SendAsync(bytesToSend, WebSocketMessageType.Text, true, _cancellationTokenSource.Token);
-            // Console.WriteLine($"Sent: {content}");
         }
         else
         {
@@ -85,9 +98,7 @@ public class TestClient
                 else
                 {
                     var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    var message = ConvertMessage(receivedMessage);
-                    if (message != null) _recievedMessages.OnNext(message);
-                    // Console.WriteLine($"Received: {receivedMessage}");
+                    HandleMessage(receivedMessage);
                 }
             }
         }
@@ -101,7 +112,7 @@ public class TestClient
         }
     }
 
-    private static object? ConvertMessage(string json)
+    private void HandleMessage(string json)
     {
         var jsonObject = JObject.Parse(json);
         var typeString = jsonObject["MessageType"]?.ToString();
@@ -111,14 +122,34 @@ public class TestClient
             throw new ArgumentException($"Unknown type {messageType}");
         }
 
-        return messageType switch
+        switch (messageType)
         {
-            MessageType.LoginRequest => JsonConvert.DeserializeObject<WebsocketMessage<LoginRequest>>(json),
-            MessageType.LoginResponse => JsonConvert.DeserializeObject<WebsocketMessage<LoginResponse>>(json),
-            MessageType.ChallengeRequest => JsonConvert.DeserializeObject<WebsocketMessage<ChallengeRequest>>(json),
-            MessageType.ChallengeResponse => JsonConvert.DeserializeObject<WebsocketMessage<ChallengeResponse>>(json),
-            MessageType.MessageResponse => JsonConvert.DeserializeObject<WebsocketMessage<MessageResponse>>(json),
-            _ => null
-        };
+            case MessageType.LoginResponse:
+                _loginResponses.OnNext(JsonConvert.DeserializeObject<WebsocketMessage<LoginResponse>>(json)!.Data);
+                break;
+            case MessageType.ChallengeResponse:
+                _challengeResponse.OnNext(
+                    JsonConvert.DeserializeObject<WebsocketMessage<ChallengeResponse>>(json)!.Data);
+                break;
+            case MessageType.MessageResponse:
+                _messageResponse.OnNext(JsonConvert.DeserializeObject<WebsocketMessage<MessageResponse>>(json)!.Data);
+                break;
+            default:
+                throw new ArgumentException($"Unhandled type {messageType}");
+        }
+    }
+
+    async Task HandleLoginResponse(LoginResponse loginResponse, string privateKey, string password)
+    {
+        Console.WriteLine("Received Challenge " + loginResponse.ChallangeToken);
+        var signedChallenge = Encryption.EncryptMessage(
+            loginResponse.ChallangeToken,
+            Encryption.ReadPrivateKey(privateKey, password),
+            Encryption.ReadPublicKey(loginResponse.SystemPublic)
+        );
+
+        await Send(
+            new WebsocketMessage<ChallengeRequest>(MessageType.ChallengeRequest, new ChallengeRequest(signedChallenge))
+        );
     }
 }

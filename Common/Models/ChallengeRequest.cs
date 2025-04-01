@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace Epsilon.Models;
+namespace Common.Models;
 
 [ExcludeFromCodeCoverage]
 public record ChallengeRequest(string SignedChallenge)

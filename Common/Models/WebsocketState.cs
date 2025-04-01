@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Subjects;
 
-namespace Epsilon.Models;
+namespace Common.Models;
 
 
 [ExcludeFromCodeCoverage]

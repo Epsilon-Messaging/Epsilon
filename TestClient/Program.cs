@@ -1,34 +1,32 @@
-﻿using System.Reactive.Linq;
-using Common;
-using Epsilon.Models;
+﻿using Common;
+using Common.Models;
 
-var client = new TestClient.TestClient();
+var client = new TestClient();
 
 var (publicKey, privateKey) = Encryption.GenerateKeys("Password123", "testuser");
 
-var IsLoggedIn = false;
+client.MessageResponses().Subscribe(HandleMessageResponse);
 
 await client.Connect("ws://localhost:5172/api/websocket");
 
-client.ReceivedMessages().Subscribe(HandleMessages);
 
 Console.WriteLine("What is your username?");
+var username = Console.ReadLine() ?? "";
 
-await client.Send(
-    new WebsocketMessage<LoginRequest>(MessageType.LoginRequest, new LoginRequest(publicKey, Console.ReadLine() ?? ""))
-);
+var success = await client.Login(publicKey, privateKey, username, "Password123");
+
+Console.WriteLine(success ? "Login Successful" : "Login Failed");
 
 string? user = null;
 
 while (true)
 {
-    await Task.Delay(100);
-    if (!IsLoggedIn) continue;
     if (user == null)
     {
         Console.WriteLine("Enter User you want to send a message to");
         user = Console.ReadLine() ?? "";
     }
+
     Console.WriteLine("Enter Message");
     var message = Console.ReadLine() ?? "";
 
@@ -43,46 +41,13 @@ while (true)
     );
 }
 
-async void HandleMessages(object message)
+void HandleMessageResponse(MessageResponse messageResponse)
 {
-    if (message is WebsocketMessage<LoginResponse> loginResponse)
-    {
-        Console.WriteLine("Received Challenge " + loginResponse.Data.ChallangeToken);
-        var signedChallenge = Encryption.EncryptMessage(
-            loginResponse.Data.ChallangeToken,
-            Encryption.ReadPrivateKey(privateKey, "Password123"),
-            Encryption.ReadPublicKey(loginResponse.Data.SystemPublic)
-        );
+    var decryptedMessage = Encryption.DecryptMessage(
+        messageResponse.Message,
+        Encryption.ReadPrivateKey(privateKey, "Password123"),
+        Encryption.ReadPublicKey(messageResponse.PublicKey)
+    );
 
-        await client.Send(
-            new WebsocketMessage<ChallengeRequest>(MessageType.ChallengeRequest, new ChallengeRequest(signedChallenge))
-        );
-    }
-
-    if (message is WebsocketMessage<ChallengeResponse> challengeResponse)
-    {
-        if (challengeResponse.Data.Success == false)
-        {
-            Console.WriteLine("Something went wrong :c");
-        }
-        else
-        {
-            Console.WriteLine("");
-            Console.WriteLine("Logged in as " + publicKey);
-
-            IsLoggedIn = true;
-        }
-    }
-
-    if (message is WebsocketMessage<MessageResponse> messageResponse)
-    {
-        var decryptedMessage = Encryption.DecryptMessage(
-            messageResponse.Data.Message,
-            Encryption.ReadPrivateKey(privateKey, "Password123"),
-            Encryption.ReadPublicKey(messageResponse.Data.PublicKey)
-        );
-
-        Console.WriteLine(messageResponse.Data.Username + ": " + decryptedMessage);
-
-    }
+    Console.WriteLine(messageResponse.Username + ": " + decryptedMessage);
 }

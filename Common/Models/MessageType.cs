@@ -1,4 +1,4 @@
-namespace Epsilon.Models;
+namespace Common.Models;
 
 public enum MessageType
 {

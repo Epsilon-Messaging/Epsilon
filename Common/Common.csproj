@@ -9,5 +9,14 @@
     <ItemGroup>
         <PackageReference Include="Portable.BouncyCastle" Version="1.9.0"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Newtonsoft.Json">
+        <HintPath>..\..\..\.nuget\packages\newtonsoft.json\13.0.3\lib\net6.0\Newtonsoft.Json.dll</HintPath>
+      </Reference>
+      <Reference Include="System.Reactive">
+        <HintPath>..\..\..\.nuget\packages\system.reactive\6.0.1\lib\net6.0\System.Reactive.dll</HintPath>
+      </Reference>
+    </ItemGroup>
     
 </Project>

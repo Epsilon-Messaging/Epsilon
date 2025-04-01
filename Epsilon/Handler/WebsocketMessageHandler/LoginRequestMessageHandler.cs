@@ -1,5 +1,5 @@
 using Common;
-using Epsilon.Models;
+using Common.Models;
 using Epsilon.Services.WebsocketStateService;
 using Serilog;
 using ILogger = Serilog.ILogger;

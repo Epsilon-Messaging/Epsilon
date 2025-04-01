@@ -1,4 +1,4 @@
-using Epsilon.Models;
+using Common.Models;
 
 namespace Epsilon.Services.WebsocketStateService;
 
