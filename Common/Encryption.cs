@@ -101,7 +101,7 @@ public static class Encryption
         using var decoderStream = PgpUtilities.GetDecoderStream(inputStream);
         var pgpObjectFactory = new PgpObjectFactory(decoderStream);
 
-        PgpEncryptedDataList encryptedDataList = null;
+        PgpEncryptedDataList? encryptedDataList = null;
         PgpObject pgpObject;
         while ((pgpObject = pgpObjectFactory.NextPgpObject()) != null)
         {
@@ -115,7 +115,7 @@ public static class Encryption
         if (encryptedDataList == null)
             throw new ArgumentException("Invalid PGP encrypted message");
 
-        PgpPublicKeyEncryptedData encryptedData = null;
+        PgpPublicKeyEncryptedData? encryptedData = null;
 
         foreach (PgpPublicKeyEncryptedData pked in encryptedDataList.GetEncryptedDataObjects())
         {
@@ -136,9 +136,9 @@ public static class Encryption
         var compressedStream = compressedData.GetDataStream();
         var compressedFactory = new PgpObjectFactory(compressedStream);
 
-        PgpOnePassSignature onePassSignature = null;
-        PgpLiteralData literalData = null;
-        PgpSignature signature = null;
+        PgpOnePassSignature? onePassSignature = null;
+        PgpLiteralData? literalData = null;
+        PgpSignature? signature = null;
 
         while ((pgpObject = compressedFactory.NextPgpObject()) != null)
         {
